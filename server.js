@@ -3,7 +3,7 @@ const express = require('express');
 const path = require('path')
 const fs = require('fs')
 const notes = require('./db/db.json');
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 const app = express();
 
 app.use(express.json());
@@ -34,12 +34,18 @@ app.post("/api/notes", (req, res) => {
   fs.writeFileSync("./db/db.json", JSON.stringify(notes));
   res.json(notes);
 });
-module.exports = app;
 
-// GET Route for homepage
-app.get('/', (req, res) =>
-  res.sendFile(path.join(__dirname, '/public/index.html'))
-);
+//Deleting new note object in JSON file
+app.delete('api/notes:id', (req, res) => {
+  for (let i = 0; i < arr.length; i++) {
+    console.log(typeof notes[i].id)
+      if (notes[i].id == req.params.id) {
+      notes.splice(i, 1)
+      fs.writeFileSync('./db/db.json', JSON.stringify(notes))
+      res.json(notes);
+    }  
+  }
+})
 
 app.listen(PORT, () =>
   console.log(`App listening at http://localhost:${PORT} 🚀`)
